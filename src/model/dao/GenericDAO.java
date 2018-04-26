@@ -4,6 +4,8 @@ import java.lang.reflect.ParameterizedType;
 import java.util.List;
 import javax.persistence.Query;
 
+import model.entity.BaseEntity;
+
 import static model.FactoryDAO.sessionInstance;
 
 public class GenericDAO<T, PK> {
@@ -29,6 +31,7 @@ public class GenericDAO<T, PK> {
 	public T save(T entity) {
 		try {
 			sessionInstance().beginTransaction();
+//			sessionInstance().load(entity, ((BaseEntity)entity).getId());
 			sessionInstance().persist(entity);
 			sessionInstance().getTransaction().commit();
 

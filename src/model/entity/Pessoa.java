@@ -1,39 +1,45 @@
 package model.entity;
 
-import java.util.Date;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "pessoa")
-public class Pessoa extends BaseEntity {
+@Table(name = "tb_pessoa")
+@Inheritance(strategy = InheritanceType.JOINED)
+public abstract class Pessoa extends BaseEntity {
 
-	private static final long serialVersionUID = 8610118473501970665L;
+	private static final long serialVersionUID = 6532358948927701635L;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	@Column(nullable = false, length = 100)
+	@Column(nullable = false, length = 50)
 	private String nome;
-	private Date datanascimento;
 
-	@Column(length = 14)
-	private String cpf;
+	@Column(nullable = false, length = 50)
+	private String telefone;
 
-	private Boolean funcionario;
+	@Column(nullable = false, length = 50)
+	private String email;
 
-//	@ManyToMany
-//	@JoinTable(name="membros", 
-//				joinColumns= {@JoinColumn(name="idpessoa")}, 
-//					inverseJoinColumns= {@JoinColumn(name="idprojeto")}
-//	)
-//	private List<Projeto> projetos;
+	@Column(nullable = false, length = 50)
+	private String rua;
+
+	@Column(nullable = false, length = 50)
+	private String bairro;
+
+	@Column(nullable = false, length = 50)
+	private String cidade;
+
+	@Column(nullable = false, length = 50)
+	private String estado;
 
 	public Pessoa() {
 		super();
@@ -55,36 +61,52 @@ public class Pessoa extends BaseEntity {
 		this.nome = nome;
 	}
 
-	public Date getDatanascimento() {
-		return datanascimento;
+	public String getTelefone() {
+		return telefone;
 	}
 
-	public void setDatanascimento(Date datanascimento) {
-		this.datanascimento = datanascimento;
+	public void setTelefone(String telefone) {
+		this.telefone = telefone;
 	}
 
-	public String getCpf() {
-		return cpf;
+	public String getEmail() {
+		return email;
 	}
 
-	public void setCpf(String cpf) {
-		this.cpf = cpf;
+	public void setEmail(String email) {
+		this.email = email;
 	}
 
-	public Boolean getFuncionario() {
-		return funcionario;
+	public String getRua() {
+		return rua;
 	}
 
-	public void setFuncionario(Boolean funcionario) {
-		this.funcionario = funcionario;
+	public void setRua(String rua) {
+		this.rua = rua;
 	}
 
-//	public List<Projeto> getProjetos() {
-//		return projetos;
-//	}
-//
-//	public void setProjetos(List<Projeto> projetos) {
-//		this.projetos = projetos;
-//	}
+	public String getBairro() {
+		return bairro;
+	}
+
+	public void setBairro(String bairro) {
+		this.bairro = bairro;
+	}
+
+	public String getCidade() {
+		return cidade;
+	}
+
+	public void setCidade(String cidade) {
+		this.cidade = cidade;
+	}
+
+	public String getEstado() {
+		return estado;
+	}
+
+	public void setEstado(String estado) {
+		this.estado = estado;
+	}
 
 }

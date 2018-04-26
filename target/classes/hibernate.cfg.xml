@@ -2,17 +2,24 @@
 <!DOCTYPE hibernate-configuration SYSTEM "http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
 <hibernate-configuration>
 	<session-factory>
+
+		<!-- DATABASES: te2018_1_db | postgres -->
+		<property name="hibernate.dialect">org.hibernate.dialect.PostgreSQLDialect</property>
 		<property name="hibernate.connection.url">jdbc:postgresql://localhost/te2018_1_db</property>
 		<property name="hibernate.connection.driver_class">org.postgresql.Driver</property>
+
 		<property name="hibernate.connection.username">postgres</property>
-		<property name="hibernate.dialect">org.hibernate.dialect.PostgreSQLDialect</property>
 		<property name="connection.password">postgres</property>
+
 		<property name="show_sql">true</property>
 
+		<!-- create | update | validate | create-drop -->
+		<property name="hibernate.hbm2ddl.auto">update</property>
 
-		<mapping class="model.entity.Pessoa"/>
-<!-- 		<mapping class="model.entity.Membros"/>
-		<mapping class="model.entity.Projeto"/> -->
+		<mapping class="model.entity.Usuario" />
+		<mapping class="model.entity.Pessoa" />
+		<mapping class="model.entity.PessoaFisica" />
+		<mapping class="model.entity.PessoaJuridica" />
 		
 	</session-factory>
 </hibernate-configuration>

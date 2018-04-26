@@ -24,5 +24,11 @@ public final class FactoryDAO {
 
 		return session;
 	}
+	
+	public static void closeInstance() {
+		sessionInstance();
+		session.close();
+		sessionFactory.close();
+	}
 
 }
