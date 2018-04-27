@@ -16,10 +16,17 @@
 		<!-- create | update | validate | create-drop -->
 		<property name="hibernate.hbm2ddl.auto">update</property>
 
-		<mapping class="model.entity.Usuario" />
+
 		<mapping class="model.entity.Pessoa" />
 		<mapping class="model.entity.PessoaFisica" />
 		<mapping class="model.entity.PessoaJuridica" />
-		
+
+		<mapping class="model.entity.Perfil" />
+		<mapping class="model.entity.Usuario" />
+
+		<mapping class="model.entity.ItemProduto" />
+		<mapping class="model.entity.Produto" />
+
+
 	</session-factory>
 </hibernate-configuration>

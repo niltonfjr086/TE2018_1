@@ -5,14 +5,14 @@ import java.util.List;
 import org.junit.Test;
 
 import model.FactoryDAO;
-import model.dao.PessoaDAO;
+import model.dao.ProdutoDAO;
 import model.entity.Pessoa;
 import model.entity.PessoaFisica;
 import model.entity.PessoaJuridica;
 
 public class PessoaTest {
 	
-	private PessoaDAO pessoaDAO = new PessoaDAO();
+	private ProdutoDAO pessoaDAO = new ProdutoDAO();
 	private Pessoa pessoa;
 		
 	private PessoaFisica pf = new PessoaFisica();

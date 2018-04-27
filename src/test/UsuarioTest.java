@@ -1,9 +1,12 @@
 package test;
 
+import static org.junit.Assert.assertNotNull;
+
 import java.util.Date;
 import java.util.List;
 
 import org.junit.Test;
+
 
 import model.FactoryDAO;
 import model.dao.UsuarioDAO;
@@ -25,25 +28,22 @@ public class UsuarioTest {
 
 	}
 
-	public void testFindAll() {
+	private void testFindAll() {
 
 		if (usuarioDAO.findAll().size() <= 0) {
 			adicionarUsuarios();
 			System.out.println("Adicionou Pessoas");
+			
 		}
 
 		List<Usuario> usuarios = usuarioDAO.findAll();
 		// List<Usuario> usuarios = FactoryDAO.sessionInstance().createQuery(("FROM " +
 		// us.getClass().getSimpleName())).getResultList();
-
-		System.out.println("Todos os usuários cadastrados: \n" + usuarios);
-
-		System.out.println("--------------------------------------------");
-		System.out.println("--------------------------------------------");
-
+		assertNotNull(usuarios);
+		
 	}
 
-	public void testUpdate() {
+	private void testUpdate() {
 
 		if (usuarioDAO.findAll().size() <= 0) {
 			adicionarUsuarios();
@@ -67,7 +67,7 @@ public class UsuarioTest {
 
 	}
 
-	public void testDelete() {
+	private void testDelete() {
 
 		if (usuarioDAO.findAll().size() <= 0) {
 			adicionarUsuarios();
@@ -89,6 +89,7 @@ public class UsuarioTest {
 		us.setObservacao("Este usuário foi o primeiro cadastrado");
 		us.setDtCadastro(new Date());
 		// pessoaDAO.save(us);
+		
 		FactoryDAO.sessionInstance().saveOrUpdate(us);
 
 		us = new Usuario();
