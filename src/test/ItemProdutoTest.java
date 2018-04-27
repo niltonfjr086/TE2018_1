@@ -29,19 +29,20 @@ public class ItemProdutoTest {
 			System.out.println("Adicionou Produtos");
 		}
 
-//		if (itemDAO.findAll().size() <= 0) {
-//			adicionarItens();
-//			System.out.println("Adicionou Itens");
-//		}
-//
-//		// List<PessoaFisica> pessoas = pessoaDAO.findAll();
+		if (itemDAO.findAll().size() <= 0) {
+			adicionarItens();
+			System.out.println("Adicionou Itens");
+		}
+
+		
+		 List<ItemProduto> itens = itemDAO.findAll();
 //		List<ItemProduto> itens = FactoryDAO.sessionInstance().createQuery(("FROM " + item.getClass().getSimpleName()))
 //				.getResultList();
-//
-//		System.out.println("Todos os itens cadastrados: \n" + itens);
-//
-//		System.out.println("--------------------------------------------");
-//		System.out.println("--------------------------------------------");
+
+		System.out.println("Todos os itens cadastrados: \n" + itens);
+
+		System.out.println("--------------------------------------------");
+		System.out.println("--------------------------------------------");
 
 		FactoryDAO.closeInstance();
 
@@ -49,38 +50,17 @@ public class ItemProdutoTest {
 
 	private void adicionarItens() {
 
+		item = new ItemProduto(produtoDAO.findById(1L), 30.00f, 500.00f, 3);
+		itemDAO.save(item);
+		
+		item = new ItemProduto(produtoDAO.findById(3L), 20.00f, 350.00f, 5);
+		itemDAO.save(item);
+		
+		item = new ItemProduto(produtoDAO.findById(2L), 10.00f, 188.99f, 2);
+		itemDAO.save(item);
+		
 		item = new ItemProduto();
-
-		// pessoaDAO.save(pf);
-		// FactoryDAO.sessionInstance().saveOrUpdate(itemDAO);
-
-		// produto = new PessoaJuridica();
-		// produto.setNome("Comunicandus");
-		// produto.setCnpj("30.301.301/3000-20");
-		// produto.setBairro("Centro");
-		// produto.setCidade("São José");
-		// produto.setEmail("jdweoi@jieo.com");
-		// produto.setEstado("SC");
-		// produto.setInscricaoEstadual("34343434");
-		// produto.setRua("Avenida Ivo Silveira");
-		// produto.setTelefone("48 3232-3232");
-		//// pessoaDAO.save(pj);
-		// FactoryDAO.sessionInstance().saveOrUpdate(produto);
-
-		// pf = new PessoaFisica();
-		// pf.setNome("João Matos");
-		// pf.setCpf("435.215.585-90");
-		// pf.setBairro("Centro");
-		// pf.setCidade("São José");
-		// pf.setEmail("jdweoi@jieo.com");
-		// pf.setEstado("SC");
-		// pf.setRg("34343434");
-		// pf.setRua("Avenida Ivo Silveira");
-		// pf.setTelefone("48 3232-3232");
-		// pessoaDAO.save(pf);
-
-		// itemDAO = new ItemProdutoDAO();
-
+		
 	}
 
 	private void adicionarProdutos() {

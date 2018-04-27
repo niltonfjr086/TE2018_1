@@ -8,6 +8,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
@@ -21,18 +22,23 @@ public class ItemProduto extends BaseEntity {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	@OneToOne(cascade = { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH,
-			CascadeType.DETACH }, fetch = FetchType.EAGER)
+	// @OneToOne(cascade = { CascadeType.PERSIST, CascadeType.MERGE,
+	// CascadeType.REFRESH,
+	// CascadeType.DETACH }, fetch = FetchType.EAGER)
+	// @JoinColumn(name = "produto_id", nullable = false)
+	// private Produto produto;
+
+	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "produto_id", nullable = false)
 	private Produto produto;
 
-	@Column(nullable = false)
+	@Column(name = "vl_frete", nullable = false)
 	private Float valorFrete;
 
-	@Column(nullable = false)
+	@Column(name = "vl_total", nullable = false)
 	private Float valorTotal;
 
-	@Column(nullable = false)
+	@Column(name = "qtd_produtos", nullable = false)
 	private Integer quantidadeProdutos;
 
 	public ItemProduto() {

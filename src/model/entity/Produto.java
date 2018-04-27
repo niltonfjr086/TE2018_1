@@ -5,6 +5,7 @@ import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -24,7 +25,7 @@ public class Produto extends BaseEntity {
 	@Column(nullable = false, length = 50)
 	private String nome;
 	
-	@OneToMany	
+	@OneToMany(mappedBy="produto", fetch = FetchType.EAGER)
 	private List<ItemProduto> itens = new ArrayList<>();
 
 	public Produto() {
