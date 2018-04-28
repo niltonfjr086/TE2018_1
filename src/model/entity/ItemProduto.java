@@ -22,13 +22,8 @@ public class ItemProduto extends BaseEntity {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	// @OneToOne(cascade = { CascadeType.PERSIST, CascadeType.MERGE,
-	// CascadeType.REFRESH,
-	// CascadeType.DETACH }, fetch = FetchType.EAGER)
-	// @JoinColumn(name = "produto_id", nullable = false)
-	// private Produto produto;
-
-	@ManyToOne(fetch = FetchType.EAGER)
+	// cascade = { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH }
+	@ManyToOne(fetch = FetchType.EAGER, cascade = { CascadeType.ALL })
 	@JoinColumn(name = "produto_id", nullable = false)
 	private Produto produto;
 

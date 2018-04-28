@@ -3,6 +3,7 @@ package model.entity;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -24,8 +25,9 @@ public class Produto extends BaseEntity {
 
 	@Column(nullable = false, length = 50)
 	private String nome;
-	
-	@OneToMany(mappedBy="produto", fetch = FetchType.EAGER)
+
+	// cascade = { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH }
+	@OneToMany(mappedBy = "produto", fetch = FetchType.EAGER, cascade = { CascadeType.ALL })
 	private List<ItemProduto> itens = new ArrayList<>();
 
 	public Produto() {
@@ -51,6 +53,14 @@ public class Produto extends BaseEntity {
 
 	public void setNome(String nome) {
 		this.nome = nome;
+	}
+
+	public List<ItemProduto> getItens() {
+		return itens;
+	}
+
+	public void setItens(List<ItemProduto> itens) {
+		this.itens = itens;
 	}
 
 }
