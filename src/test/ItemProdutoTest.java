@@ -2,6 +2,7 @@ package test;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,7 +40,7 @@ public class ItemProdutoTest {
 			System.out.println("Adicionou Produtos");
 			produtos = produtoDAO.findAll();
 		}
-		assertNotNull(produtos);
+		assertNotNull("Adicionou Produtos", produtos);
 
 		this.testUpdateProduto();
 
@@ -54,9 +55,11 @@ public class ItemProdutoTest {
 			System.out.println("Adicionou Itens");
 			itens = itemDAO.findAll();
 		}
-		assertNotNull(itens);
-		
+		assertNotNull("Adicionou Itens", itens);
+
 		this.testDeleteItem();
+		
+		this.testUpdateItem();
 
 		System.out.println("Todos os itens cadastrados: \n" + itens);
 
@@ -83,7 +86,7 @@ public class ItemProdutoTest {
 		Produto p = produtoDAO.findById(1L);
 		p.setNome("Milho Verde");
 		produtoDAO.update(p);
-		assertEquals("Milho Verde", produtoDAO.findById(1L).getNome());
+		assertEquals("Atualizou Produto", "Milho Verde", produtoDAO.findById(1L).getNome());
 	}
 
 	private void adicionarItens() {
@@ -107,13 +110,14 @@ public class ItemProdutoTest {
 		item.setQuantidadeProdutos(8888);
 		itemDAO.update(item);
 
-		assertEquals(String.valueOf(8888), itemDAO.findById(1L).getQuantidadeProdutos().toString());
+		assertEquals("Atualizou Item", String.valueOf(8888), itemDAO.findById(1L).getQuantidadeProdutos().toString());
 	}
 
 	private void testDeleteItem() {
-		
+
 		itemDAO.delete(2L);
-		System.out.println(itemDAO.findById(2L).toString());;
+		// System.out.println(itemDAO.findById(2L).toString());;
+		assertNull("Apagou Item", itemDAO.findById(2L));
 
 	}
 

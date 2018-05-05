@@ -26,8 +26,7 @@ public class Produto extends BaseEntity {
 	@Column(nullable = false, length = 50)
 	private String nome;
 
-	// cascade = { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH }
-	@OneToMany(mappedBy = "produto", fetch = FetchType.EAGER, cascade = { CascadeType.ALL })
+	@OneToMany(mappedBy = "produto", fetch = FetchType.EAGER, cascade = { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH })
 	private List<ItemProduto> itens = new ArrayList<>();
 
 	public Produto() {
