@@ -3,14 +3,21 @@ package model.dao;
 import java.lang.reflect.ParameterizedType;
 import java.util.List;
 import javax.persistence.Query;
+import javax.persistence.Table;
 
-import model.entity.BaseEntity;
+import org.hibernate.metadata.ClassMetadata;
+
+import model.filter.FilterSelector;
 
 import static model.FactoryDAO.sessionInstance;
+//import static model.FactoryDAO.closeInstance;
+import static model.FactoryDAO.sessionFactory;;
 
 public class GenericDAO<T, PK> {
 
 	protected Class<?> manipulada;
+	
+	protected FilterSelector<T> filter;
 
 	public GenericDAO() {
 		super();
@@ -31,15 +38,15 @@ public class GenericDAO<T, PK> {
 	public T save(T entity) {
 		try {
 			sessionInstance().beginTransaction();
-//			sessionInstance().load(entity, ((BaseEntity)entity).getId());
 			sessionInstance().persist(entity);
 			sessionInstance().getTransaction().commit();
+			sessionInstance().refresh(entity);
 
 		} catch (Exception e) {
 			sessionInstance().getTransaction().rollback();
 			throw e;
 		} finally {
-			// sessionInstance().close();
+			// closeInstance();
 		}
 		return entity;
 	}
@@ -49,12 +56,13 @@ public class GenericDAO<T, PK> {
 			sessionInstance().beginTransaction();
 			sessionInstance().merge(entity);
 			sessionInstance().getTransaction().commit();
+			sessionInstance().refresh(entity);
 
 		} catch (Exception e) {
 			sessionInstance().getTransaction().rollback();
 			throw e;
 		} finally {
-			// sessionInstance().close();
+			// closeInstance();
 		}
 		return entity;
 	}
@@ -62,9 +70,11 @@ public class GenericDAO<T, PK> {
 	public void delete(PK pk) {
 		try {
 			sessionInstance().beginTransaction();
-			sessionInstance().remove(findById(pk));
-			sessionInstance().getTransaction().commit();
 
+			T entity = findById(pk);
+
+			sessionInstance().remove(entity);
+			sessionInstance().getTransaction().commit();
 			// return true;
 
 		} catch (Exception e) {
@@ -72,7 +82,7 @@ public class GenericDAO<T, PK> {
 			throw e;
 
 		} finally {
-			// sessionInstance().close();
+			// closeInstance();
 		}
 
 	}
@@ -89,7 +99,33 @@ public class GenericDAO<T, PK> {
 
 	@SuppressWarnings("unchecked")
 	public List<T> findAll() {
-		return sessionInstance().createQuery(("FROM " + this.manipulada.getName())).getResultList();
+
+		List<T> retorno = sessionInstance().createQuery(("FROM " + this.manipulada.getName())).getResultList();
+		// closeInstance();
+
+		return retorno;
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<T> findAll(FilterSelector<T> selector) {
+		return null;
+	}
+
+	public StringBuilder buildSQLCommand(T entity) {
+
+		// String className = entity.getClass().getSimpleName();
+
+		Table table = entity.getClass().getAnnotation(Table.class);
+		StringBuilder jpql = new StringBuilder("SELECT t FROM " + table.name() + " t ");
+
+//		System.out.println(jpql.toString());
+		
+		// ClassMetadata hibernateMetadata = sessionFactory().;
+		// AbstractEntityPersister persister = (AbstractEntityPersister)
+		// hibernateMetadata;
+		// String tableName = persister.getTableName();
+		// String[] columnNames = persister.getKeyColumnNames();
+		return jpql;
 	}
 
 	@SuppressWarnings("unchecked")
@@ -101,6 +137,7 @@ public class GenericDAO<T, PK> {
 		} catch (Exception e) {
 			throw e;
 		} finally {
+			// closeInstance();
 		}
 
 		return retorno;

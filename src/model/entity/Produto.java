@@ -1,6 +1,6 @@
 package model.entity;
 
-import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -26,16 +26,21 @@ public class Produto extends BaseEntity {
 	@Column(nullable = false, length = 50)
 	private String nome;
 
-	@OneToMany(mappedBy = "produto", fetch = FetchType.EAGER, cascade = { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH })
-	private List<ItemProduto> itens = new ArrayList<>();
+	@Column(nullable = false, name = "dt_cadastro")
+	private Calendar dtCadastro;
+
+	@OneToMany( cascade = { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH },
+			mappedBy = "produto", fetch = FetchType.EAGER)
+	private List<ItemProduto> itens;
 
 	public Produto() {
 		super();
 	}
 
-	public Produto(String nome) {
+	public Produto(String nome, Calendar cadastro) {
 		super();
 		this.nome = nome;
+		this.dtCadastro = cadastro;
 	}
 
 	public Long getId() {

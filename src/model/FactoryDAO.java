@@ -24,11 +24,24 @@ public final class FactoryDAO {
 
 		return session;
 	}
-	
+
 	public static void closeInstance() {
 		sessionInstance();
 		session.close();
 		sessionFactory.close();
+
+		session = null;
+		sessionFactory = null;
+		cfg = null;
+	}
+
+	public static SessionFactory sessionFactory() {
+
+		if (sessionFactory == null) {
+			sessionInstance();
+		}
+
+		return sessionFactory;
 	}
 
 }
