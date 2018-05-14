@@ -30,10 +30,10 @@ public class ItemProdutoTest {
 		System.out.println("STARTED");
 
 		
-//		this.testSelector();
+		this.testSelector();
 		
 		
-		this.testFindAll();
+//		this.testFindAll();
 
 
 		FactoryDAO.closeInstance();

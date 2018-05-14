@@ -1,6 +1,8 @@
 package model.dao;
 
+import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;
+import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.Query;
 import javax.persistence.Table;
@@ -16,7 +18,7 @@ import static model.FactoryDAO.sessionFactory;;
 public class GenericDAO<T, PK> {
 
 	protected Class<?> manipulada;
-	
+
 	protected FilterSelector<T> filter;
 
 	public GenericDAO() {
@@ -113,13 +115,43 @@ public class GenericDAO<T, PK> {
 
 	public StringBuilder buildSQLCommand(T entity) {
 
-		// String className = entity.getClass().getSimpleName();
+		Class<? extends Object> c = entity.getClass();
+		Field[] fields = c.getDeclaredFields();
 
-		Table table = entity.getClass().getAnnotation(Table.class);
+		List<Object> values = null;
+
+		String className = c.getSimpleName();
+
+		Table table = c.getAnnotation(Table.class);
 		StringBuilder jpql = new StringBuilder("SELECT t FROM " + table.name() + " t ");
 
-//		System.out.println(jpql.toString());
+		for (Field f : fields) {
+			f.setAccessible(true);
+
+			Object value = null;
+			try {
+				value = f.get(entity);
+			} catch (IllegalArgumentException | IllegalAccessException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
+			if (value != null) {
+				
+				if (values != null) {
+					values.add(value);
+					
+				} else {
+					values = new ArrayList<>();
+					values.add(value);
+				}
+			}
+		}
 		
+		System.out.println(values);
+
+		// System.out.println(jpql.toString());
+
 		// ClassMetadata hibernateMetadata = sessionFactory().;
 		// AbstractEntityPersister persister = (AbstractEntityPersister)
 		// hibernateMetadata;
