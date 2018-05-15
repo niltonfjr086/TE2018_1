@@ -2,14 +2,20 @@ package model.dao;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
+import javax.persistence.Column;
 import javax.persistence.Query;
 import javax.persistence.Table;
 
 import org.hibernate.metadata.ClassMetadata;
 
-import model.filter.FilterSelector;
+import model.filter.FilterBuilder;
 
 import static model.FactoryDAO.sessionInstance;
 //import static model.FactoryDAO.closeInstance;
@@ -19,7 +25,7 @@ public class GenericDAO<T, PK> {
 
 	protected Class<?> manipulada;
 
-	protected FilterSelector<T> filter;
+	protected FilterBuilder<T> filter;
 
 	public GenericDAO() {
 		super();
@@ -109,55 +115,98 @@ public class GenericDAO<T, PK> {
 	}
 
 	@SuppressWarnings("unchecked")
-	public List<T> findAll(FilterSelector<T> selector) {
+	public List<T> findAll(FilterBuilder<T> selector) {
 		return null;
 	}
 
 	public StringBuilder buildSQLCommand(T entity) {
 
+		if(entity != null) {
+			
+			Class<? extends Object> c = entity.getClass();
+			
+			Map<String, String> mappedEntity = paramsCorverter(entity);
+			
+			Table table = c.getAnnotation(Table.class);
+			StringBuilder jpql = new StringBuilder("SELECT t FROM " + table.name() + " t");
+			
+			if (mappedEntity != null && mappedEntity.size() > 0) {
+				
+				jpql.append(" WHERE ");
+				
+				boolean frst = true;
+				for (Map.Entry<String, String> entry : mappedEntity.entrySet()) {
+					
+					if (!frst) {
+						jpql.append(" AND ");
+					} else {
+						frst = false;
+					}
+					
+					jpql.append("'" + entry.getKey() + "'" + " = " + "'" + entry.getValue() + "'");
+				}
+			}
+			return jpql;			
+		}
+		return null;
+	}
+
+	private Map<String, String> paramsCorverter(T entity) {
+
 		Class<? extends Object> c = entity.getClass();
+
+		Map<String, String> mappedEntity = null;
 		Field[] fields = c.getDeclaredFields();
-
-		List<Object> values = null;
-
-		String className = c.getSimpleName();
-
-		Table table = c.getAnnotation(Table.class);
-		StringBuilder jpql = new StringBuilder("SELECT t FROM " + table.name() + " t ");
 
 		for (Field f : fields) {
 			f.setAccessible(true);
 
-			Object value = null;
-			try {
-				value = f.get(entity);
-			} catch (IllegalArgumentException | IllegalAccessException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+			String column = null;
+			String value = null;
+
+			Column col = f.getAnnotation(Column.class);
+
+			if (col != null && !col.name().equals("")) {
+				column = col.name();
+			} else {
+				if (!f.getName().equals("serialVersionUID")) {
+					column = f.getName();
+				}
 			}
 
-			if (value != null) {
-				
-				if (values != null) {
-					values.add(value);
-					
+			Object o = null;
+			try {
+				o = f.get(entity);
+			} catch (IllegalArgumentException | IllegalAccessException e) {
+				e.printStackTrace();
+			}
+			if (o != null) {
+				if (f.getType() == Calendar.class) {
+
+					SimpleDateFormat simple = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
+					Calendar cc = (Calendar) o;
+					String formatted = simple.format(cc.getTime());
+					value = formatted;
+
 				} else {
-					values = new ArrayList<>();
-					values.add(value);
+					if (f.getType() != List.class && f.getType() != ArrayList.class) {
+						value = String.valueOf(o);
+					}
+				}
+			}
+
+			if (column != null && value != null) {
+
+				if (mappedEntity != null) {
+					mappedEntity.put(column, value);
+
+				} else {
+					mappedEntity = new HashMap<>();
+					mappedEntity.put(column, value);
 				}
 			}
 		}
-		
-		System.out.println(values);
-
-		// System.out.println(jpql.toString());
-
-		// ClassMetadata hibernateMetadata = sessionFactory().;
-		// AbstractEntityPersister persister = (AbstractEntityPersister)
-		// hibernateMetadata;
-		// String tableName = persister.getTableName();
-		// String[] columnNames = persister.getKeyColumnNames();
-		return jpql;
+		return mappedEntity;
 	}
 
 	@SuppressWarnings("unchecked")

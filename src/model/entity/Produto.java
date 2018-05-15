@@ -59,6 +59,14 @@ public class Produto extends BaseEntity {
 		this.nome = nome;
 	}
 
+	public Calendar getDtCadastro() {
+		return dtCadastro;
+	}
+
+	public void setDtCadastro(Calendar dtCadastro) {
+		this.dtCadastro = dtCadastro;
+	}
+
 	public List<ItemProduto> getItens() {
 		return itens;
 	}

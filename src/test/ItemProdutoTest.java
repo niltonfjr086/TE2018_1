@@ -29,12 +29,9 @@ public class ItemProdutoTest {
 	public void test() {
 		System.out.println("STARTED");
 
-		
 		this.testSelector();
-		
-		
-//		this.testFindAll();
 
+		// this.testFindAll();
 
 		FactoryDAO.closeInstance();
 	}
@@ -47,7 +44,7 @@ public class ItemProdutoTest {
 			System.out.println("Adicionou Produtos");
 			produtos = produtoDAO.findAll();
 		}
-//		assertNotNull("Produtos Adicionados", produtos);
+		// assertNotNull("Produtos Adicionados", produtos);
 		assertNotEquals(0, produtos.size());
 
 		System.out.println("Todos os produtos cadastrados: \n" + produtos);
@@ -61,7 +58,7 @@ public class ItemProdutoTest {
 			System.out.println("Adicionou Itens");
 			itens = itemDAO.findAll();
 		}
-//		assertNotNull("Itens Adicionados", itens);
+		// assertNotNull("Itens Adicionados", itens);
 		assertNotEquals(0, itens.size());
 
 		this.testUpdateProduto();
@@ -74,8 +71,8 @@ public class ItemProdutoTest {
 
 		System.out.println("--------------------------------------------");
 		System.out.println("--------------------------------------------");
-		
-//		System.out.println(itens.get(0).get);
+
+		// System.out.println(itens.get(0).get);
 		produtos = null;
 		produtos = produtoDAO.findAll();
 		System.out.println("Após haver itens. Todos os produtos cadastrados: \n" + produtos);
@@ -97,7 +94,7 @@ public class ItemProdutoTest {
 		c.set(2017, 11, 31);
 		produto = new Produto("Tapete", c);
 		produtoDAO.save(produto);
-		
+
 		c = Calendar.getInstance();
 		c.set(2018, 6, 15);
 		produto = new Produto("Televisor", c);
@@ -115,19 +112,18 @@ public class ItemProdutoTest {
 
 	private void adicionarItens() {
 
-//		item = new ItemProduto(produtoDAO.findById(1L), 30.00f, 500.00f, 3);
+		// item = new ItemProduto(produtoDAO.findById(1L), 30.00f, 500.00f, 3);
 		item = new ItemProduto(produtos.get(0), 30.00f, 500.00f, 3);
 		itemDAO.save(item);
-		
-//		item = new ItemProduto(produtoDAO.findById(3L), 20.00f, 350.00f, 5);
+
+		// item = new ItemProduto(produtoDAO.findById(3L), 20.00f, 350.00f, 5);
 		item = new ItemProduto(produtos.get(2), 20.00f, 350.00f, 5);
 		itemDAO.save(item);
-		
-//		item = new ItemProduto(produtoDAO.findById(2L), 10.00f, 188.99f, 2);
+
+		// item = new ItemProduto(produtoDAO.findById(2L), 10.00f, 188.99f, 2);
 		item = new ItemProduto(produtos.get(1), 10.00f, 188.99f, 2);
 		itemDAO.save(item);
-		
-		
+
 		item = new ItemProduto();
 
 	}
@@ -143,29 +139,28 @@ public class ItemProdutoTest {
 
 	private void testDeleteItem() {
 
-		if(itemDAO.findById(2L) != null)
-		itemDAO.delete(2L);
+		if (itemDAO.findById(2L) != null)
+			itemDAO.delete(2L);
 		// System.out.println(itemDAO.findById(2L).toString());;
 		assertNull("Apagou Item", itemDAO.findById(2L));
 
 	}
-	
+
 	private void testSelector() {
-//		new StringBuilder("SELECT p FROM Produto p ")
+		// new StringBuilder("SELECT p FROM Produto p ")
 		System.out.println("SELECTOR DEV WAS STARTED");
-		
-		
-		
+
 		Produto p = new Produto();
 		p.setNome("Milho Verde");
-		
-//		produtoDAO.criarFiltro(p, new StringBuilder("SELECT p FROM Produto p "));
-		
-		
-		System.out.println(produtoDAO.buildSQLCommand(p).toString());;
-		
-		
-		
+
+		Calendar c = Calendar.getInstance();
+		c.set(2010, 0, 10);
+		p.setDtCadastro(c);
+		// produtoDAO.criarFiltro(p, new StringBuilder("SELECT p FROM Produto p "));
+
+		System.out.println(produtoDAO.buildSQLCommand(p).toString());
+		;
+
 	}
 
 }
