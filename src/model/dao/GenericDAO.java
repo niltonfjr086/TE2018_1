@@ -119,94 +119,143 @@ public class GenericDAO<T, PK> {
 		return null;
 	}
 
-	public StringBuilder buildSQLCommand(T entity) {
+	public StringBuilder buildSQLCommand(T entityInit, T entityEnd) {
 
-		if(entity != null) {
-			
-			Class<? extends Object> c = entity.getClass();
-			
-			Map<String, String> mappedEntity = paramsCorverter(entity);
+		if (entityInit == null)
+			entityInit = entityEnd;
+		if (entityEnd == null)
+			entityEnd = entityInit;
+
+		if (entityInit != null && entityEnd != null) {
+
+			Class<? extends Object> c = entityInit.getClass();
+
+			int counter = 0;
+//			Map<String, String> mappedEntityInit = paramsCorverter(entityInit);
+//			Map<String, String> mappedEntityEnd = paramsCorverter(entityEnd);
+
+			List<Map<String, String>> mappedEntities = paramsCorverter(entityInit, entityEnd);
 			
 			Table table = c.getAnnotation(Table.class);
 			StringBuilder jpql = new StringBuilder("SELECT t FROM " + table.name() + " t");
-			
-			if (mappedEntity != null && mappedEntity.size() > 0) {
-				
-				jpql.append(" WHERE ");
-				
-				boolean frst = true;
-				for (Map.Entry<String, String> entry : mappedEntity.entrySet()) {
+
+			if (mappedEntities != null && mappedEntities.size() > 0) {
+
+				for(Map<String,String> mpe : mappedEntities) {
 					
-					if (!frst) {
-						jpql.append(" AND ");
-					} else {
-						frst = false;
-					}
-					
-					jpql.append("'" + entry.getKey() + "'" + " = " + "'" + entry.getValue() + "'");
 				}
+				jpql.append(" WHERE ");
+
+				boolean frst = true;
+//				for (Map.Entry<String, String> entry : mappedEntityInit.entrySet()) {
+//
+//					if (!frst) {
+//						jpql.append(" AND ");
+//					} else {
+//						frst = false;
+//					}
+//
+//					jpql.append("'" + entry.getKey() + "'" + " >= " + "'" + entry.getValue() + "'");
+//				}
 			}
-			return jpql;			
+			return jpql;
 		}
 		return null;
 	}
 
-	private Map<String, String> paramsCorverter(T entity) {
+	private List<Map<String, String>> paramsCorverter(T entityInit, T entityEnd) {
 
-		Class<? extends Object> c = entity.getClass();
+		Class<? extends Object> c1 = entityInit.getClass();
+		Class<? extends Object> c2 = entityEnd.getClass();
 
-		Map<String, String> mappedEntity = null;
-		Field[] fields = c.getDeclaredFields();
+		Map<String, String> mappedEntityInit = null;
+		Map<String, String> mappedEntityEnd = null;
 
-		for (Field f : fields) {
-			f.setAccessible(true);
-
-			String column = null;
-			String value = null;
-
-			Column col = f.getAnnotation(Column.class);
-
-			if (col != null && !col.name().equals("")) {
-				column = col.name();
+		List<Map<String, String>> mappedEntities = new ArrayList<>();
+		
+		Field[] fields1 = c1.getDeclaredFields();
+		Field[] fields2 = c2.getDeclaredFields();
+		
+		for(int i = 0; i < fields1.length || i < fields2.length ;i++) {
+			
+			fields1[i].setAccessible(true);
+			fields2[i].setAccessible(true);
+			
+			Column col1 = fields1[i].getAnnotation(Column.class);
+			Column col2 = fields2[i].getAnnotation(Column.class);
+			
+			String column1, column2 = null;
+			String value1, value2 = null;
+			
+			
+			
+			if (col1 != null && !col1.name().equals("")) {
+				column1 = col1.name();
 			} else {
-				if (!f.getName().equals("serialVersionUID")) {
-					column = f.getName();
+				if (!fields1[i].getName().equals("serialVersionUID")) {
+					column1 = fields1[i].getName();
 				}
 			}
-
-			Object o = null;
-			try {
-				o = f.get(entity);
-			} catch (IllegalArgumentException | IllegalAccessException e) {
-				e.printStackTrace();
-			}
-			if (o != null) {
-				if (f.getType() == Calendar.class) {
-
-					SimpleDateFormat simple = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
-					Calendar cc = (Calendar) o;
-					String formatted = simple.format(cc.getTime());
-					value = formatted;
-
-				} else {
-					if (f.getType() != List.class && f.getType() != ArrayList.class) {
-						value = String.valueOf(o);
-					}
+			
+			if (col2 != null && !col2.name().equals("")) {
+				column2 = col2.name();
+			} else {
+				if (!fields2[i].getName().equals("serialVersionUID")) {
+					column2 = fields2[i].getName();
 				}
 			}
-
-			if (column != null && value != null) {
-
-				if (mappedEntity != null) {
-					mappedEntity.put(column, value);
-
-				} else {
-					mappedEntity = new HashMap<>();
-					mappedEntity.put(column, value);
-				}
-			}
+			
 		}
-		return mappedEntity;
+
+//		for (Field f : fields1) {
+//			f.setAccessible(true);
+//
+//			String column = null;
+//			String value = null;
+//
+//			Column col = f.getAnnotation(Column.class);
+//
+//			if (col != null && !col.name().equals("")) {
+//				column = col.name();
+//			} else {
+//				if (!f.getName().equals("serialVersionUID")) {
+//					column = f.getName();
+//				}
+//			}
+//
+//			Object o = null;
+//			try {
+//				o = f.get(entityInit);
+//			} catch (IllegalArgumentException | IllegalAccessException e) {
+//				e.printStackTrace();
+//			}
+//			if (o != null) {
+//				if (f.getType() == Calendar.class) {
+//
+//					SimpleDateFormat simple = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
+//					Calendar cc = (Calendar) o;
+//					String formatted = simple.format(cc.getTime());
+//					value = formatted;
+//
+//				} else {
+//					if (f.getType() != List.class && f.getType() != ArrayList.class) {
+//						value = String.valueOf(o);
+//					}
+//				}
+//			}
+//
+//			if (column != null && value != null) {
+//
+//				if (mappedEntityInit != null) {
+//					mappedEntityInit.put(column, value);
+//
+//				} else {
+//					mappedEntityInit = new HashMap<>();
+//					mappedEntityInit.put(column, value);
+//				}
+//			}
+//		}
+		return mappedEntities;
 	}
 
 	@SuppressWarnings("unchecked")

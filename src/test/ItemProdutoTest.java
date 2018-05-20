@@ -29,9 +29,9 @@ public class ItemProdutoTest {
 	public void test() {
 		System.out.println("STARTED");
 
-		this.testSelector();
+//		this.testSelector();
 
-		// this.testFindAll();
+		 this.testFindAll();
 
 		FactoryDAO.closeInstance();
 	}
@@ -150,16 +150,20 @@ public class ItemProdutoTest {
 		// new StringBuilder("SELECT p FROM Produto p ")
 		System.out.println("SELECTOR DEV WAS STARTED");
 
-		Produto p = new Produto();
-		p.setNome("Milho Verde");
-
-		Calendar c = Calendar.getInstance();
-		c.set(2010, 0, 10);
-		p.setDtCadastro(c);
+		Produto p1 = new Produto();
+		p1.setNome("Milho Verde");
+		Calendar c1 = Calendar.getInstance();
+		c1.set(2010, 0, 10);
+		p1.setDtCadastro(c1);
 		// produtoDAO.criarFiltro(p, new StringBuilder("SELECT p FROM Produto p "));
 
-		System.out.println(produtoDAO.buildSQLCommand(p).toString());
-		;
+		Produto p2 = new Produto();
+		p2.setNome("z");
+		Calendar c2 = Calendar.getInstance();
+		c2.set(2010, 0, 10);
+		p2.setDtCadastro(c2);
+		
+		System.out.println(produtoDAO.buildSQLCommand(p1,p2).toString());
 
 	}
 

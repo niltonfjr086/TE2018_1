@@ -1,33 +1,56 @@
 package test;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.Test;
 
 import model.FactoryDAO;
-import model.dao.ProdutoDAO;
+import model.dao.PessoaDAO;
+import model.dao.PessoaFisicaDAO;
+import model.dao.PessoaJuridicaDAO;
 import model.entity.Pessoa;
 import model.entity.PessoaFisica;
 import model.entity.PessoaJuridica;
 
 public class PessoaTest {
 	
-	private ProdutoDAO pessoaDAO = new ProdutoDAO();
-	private Pessoa pessoa;
-		
+	private PessoaDAO pessoaDAO = new PessoaDAO();
+//	private Pessoa pessoa = new Pessoa();
+	
+	private PessoaFisicaDAO pessoaFisicaDAO = new PessoaFisicaDAO();
 	private PessoaFisica pf = new PessoaFisica();
+
+	private PessoaJuridicaDAO pessoaJuridicaDAO = new PessoaJuridicaDAO();
 	private PessoaJuridica pj = new PessoaJuridica();
 	
 	@Test
 	public void testFindAll() {
 		
-		if (pessoaDAO.findAll().size() <= 0) {
+		List<Pessoa> pessoas = new ArrayList<>();
+		
+//		pessoas.addAll(FactoryDAO.sessionInstance().createQuery(("FROM " + pj.getClass().getSimpleName())).getResultList());
+//		pessoas.addAll(FactoryDAO.sessionInstance().createQuery(("FROM " + pf.getClass().getSimpleName())).getResultList());
+		
+//		pessoas.addAll(pessoaFisicaDAO.findAll());
+//		pessoas.addAll(pessoaJuridicaDAO.findAll());
+		
+		pessoas.addAll(pessoaDAO.findAll());
+		
+		if (pessoas.size() <= 0) {
 			adicionarPessoas();
-			System.out.println("Adicionou Pessoas");
+			updatePJ();
+			deletePF();
+			
+			System.out.println("Adicionou, atualizou, apagou e leu Pessoas");
+			pessoas = new ArrayList<>();
+			pessoas.addAll(pessoaFisicaDAO.findAll());
+			pessoas.addAll(pessoaJuridicaDAO.findAll());
 		}
 		
-//		List<PessoaFisica> pessoas = pessoaDAO.findAll();	
-		List<Pessoa> pessoas = FactoryDAO.sessionInstance().createQuery(("FROM " + pj.getClass().getSimpleName())).getResultList();
+//		pessoas.addAll(FactoryDAO.sessionInstance().createQuery(("FROM " + pj.getClass().getSimpleName())).getResultList());
+//		pessoas.addAll(FactoryDAO.sessionInstance().createQuery(("FROM " + pf.getClass().getSimpleName())).getResultList());
+
 		
 		System.out.println("Todas as pessoas cadastradas: \n" + pessoas);
 		
@@ -53,8 +76,10 @@ public class PessoaTest {
 		pf.setRg("34343434");
 		pf.setRua("Avenida Ivo Silveira");
 		pf.setTelefone("48 3232-3232");
-//		pessoaDAO.save(pf);
-		FactoryDAO.sessionInstance().saveOrUpdate(pf);
+//		pessoaFisicaDAO.save(pf);
+		pessoaDAO.save(pf);
+//		FactoryDAO.sessionInstance().saveOrUpdate(pf);
+		
 
 		pj = new PessoaJuridica();
 		pj.setNome("Comunicandus");
@@ -66,25 +91,57 @@ public class PessoaTest {
 		pj.setInscricaoEstadual("34343434");
 		pj.setRua("Avenida Ivo Silveira");
 		pj.setTelefone("48 3232-3232");
-////		pessoaDAO.save(pj);
-		FactoryDAO.sessionInstance().saveOrUpdate(pj);
+//		pessoaJuridicaDAO.save(pj);
+		pessoaDAO.save(pj);
+//		FactoryDAO.sessionInstance().saveOrUpdate(pj);
 		
 		
-//		pf = new PessoaFisica();
-//		pf.setNome("João Matos");
-//		pf.setCpf("435.215.585-90");
-//		pf.setBairro("Centro");
-//		pf.setCidade("São José");
-//		pf.setEmail("jdweoi@jieo.com");
-//		pf.setEstado("SC");
-//		pf.setRg("34343434");
-//		pf.setRua("Avenida Ivo Silveira");
-//		pf.setTelefone("48 3232-3232");
-//		pessoaDAO.save(pf);
+		
+		pf = new PessoaFisica();
+		pf.setNome("João Matos");
+		pf.setCpf("435.215.585-90");
+		pf.setBairro("Centro");
+		pf.setCidade("São José");
+		pf.setEmail("jdweoi@jieo.com");
+		pf.setEstado("SC");
+		pf.setRg("34343434");
+		pf.setRua("Avenida Ivo Silveira");
+		pf.setTelefone("48 3232-3232");
+//		pessoaFisicaDAO.save(pf);
+		pessoaDAO.save(pf);
 		
 		
 		pf = new PessoaFisica();
 		pj = new PessoaJuridica();
+	}
+	
+	private void updatePJ() {
+		
+		try {
+			PessoaJuridica pj = pessoaJuridicaDAO.findById(1L);
+			
+			pj.setNome("Komunicandoit");
+			
+			pessoaDAO.update(pj);
+			
+		}catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+	}
+	
+	private void deletePF() {
+		
+		try {
+			PessoaFisica pf = pessoaFisicaDAO.findById(2L);
+			
+			System.out.println("Sendo apagado: " + pf.toString());
+			
+			pessoaFisicaDAO.delete(pf.getId());
+			
+		}catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 }

@@ -47,7 +47,7 @@ public class UsuarioTest {
 
 		if (usuarioDAO.findAll().size() <= 0) {
 			adicionarUsuarios();
-			System.out.println("Adicionou Pessoas");
+			System.out.println("Adicionou Usuários");
 		}
 
 		Usuario usuario = usuarioDAO.findById(1L);

@@ -12,12 +12,12 @@ import model.filter.ProdutoSeletor;
 public class ProdutoDAO extends GenericDAO<Produto, Long> {
 	
 	
-	public void teste() {
-		String query="";
-		Object[] params = {"lala"};
-		
-		executeQuery(query, params);
-	}
+//	public void teste() {
+//		String query="";
+//		Object[] params = {"lala"};
+//		
+//		executeQuery(query, params);
+//	}
 
 //	public List<Produto> listar(ProdutoSeletor seletor) {
 //		Query q = null;
